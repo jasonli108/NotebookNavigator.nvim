@@ -117,6 +117,13 @@ M.run_cells_below = function(repl_args)
   core.run_cells_below(cell_marker(), M.config.repl_provider, repl_args)
 end
 
+--- Run all cells above (including current cell)
+---
+---@param repl_args table|nil Optional config for the repl.
+M.run_cells_above = function(repl_args)
+  core.run_cells_above(cell_marker(), M.config.repl_provider, repl_args)
+end
+
 --- Comment all the contents of the cell under the cursor
 ---
 --- The commenting functionality is supported by external plugins. Currently the
@@ -155,6 +162,7 @@ end
 local hydra_hint = [[
  _j_/_k_: move down/up   _c_: comment     _a_/_b_: add cell above/below
 _x_: run & move down  _s_: split cell   _X_: run
+_rb_: run cells below  _r_: run all cells   _ra_: run cells above
                     _<esc>_/_q_: exit
 ]]
 
@@ -191,6 +199,21 @@ local function activate_hydra(config)
       config.hydra_keys.run_and_move,
       M.run_and_move,
       { desc = "Run & Move", nowait = true },
+    },
+    {
+      config.hydra_keys.run_all_cells,
+      M.run_all_cells,
+      { desc = "Run all cells", nowait = true },
+    },
+    {
+      config.hydra_keys.run_cells_above,
+      M.run_cells_above,
+      { desc = "Run cells above", nowait = true },
+    },
+    {
+      config.hydra_keys.run_cells_below,
+      M.run_cells_below,
+      { desc = "Run cells below", nowait = true },
     },
     {
       config.hydra_keys.add_cell_after,
@@ -258,6 +281,9 @@ M.config = {
     comment = "c",
     run = "X",
     run_and_move = "x",
+    run_all_cells = "r",
+    run_cells_above = "ra",
+    run_cells_below = "rb",
     move_up = "k",
     move_down = "j",
     add_cell_before = "a",
@@ -298,7 +324,10 @@ M.setup = function(config)
   vim.validate({
     ["config.hydra_keys.comment"] = { M.config.hydra_keys.comment, "string" },
     ["config.hydra_keys.run"] = { M.config.hydra_keys.run, "string" },
+    ["config.hydra_keys.run_all_cells"] = { M.config.hydra_keys.run_all_cells, "string" },
     ["config.hydra_keys.run_and_move"] = { M.config.hydra_keys.run_and_move, "string" },
+    ["config.hydra_keys.run_cells_above"] = { M.config.hydra_keys.run_cells_above, "string" },
+    ["config.hydra_keys.run_cells_below"] = { M.config.hydra_keys.run_cells_below, "string" },
     ["config.hydra_keys.move_up"] = { M.config.hydra_keys.move_up, "string" },
     ["config.hydra_keys.move_down"] = { M.config.hydra_keys.move_down, "string" },
     ["config.hydra_keys.add_cell_before"] = { M.config.hydra_keys.add_cell_before, "string" },
